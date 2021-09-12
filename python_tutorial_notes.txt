@@ -1,0 +1,8 @@
+
+### isinstance
+syntax: isinstance(object, classinfo)
+The isinstance() function checks if the object (first argument) is an instance or subclass of classinfo class (second argument).
+
+### assert
+
+Assertions are simply boolean expressions that check if the conditions return true or not. If it is true, the program does nothing and moves to the next line of code. However, if it's false, the program stops and throws an error.

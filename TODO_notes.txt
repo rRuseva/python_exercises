@@ -1,0 +1,7 @@
+TO DO:
+
+grayscale_histogram.py: 
+mak it for RGB
+
+introOpenCV_histogram - not working 
+30days python - finish day9
