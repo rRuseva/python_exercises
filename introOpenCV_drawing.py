@@ -12,7 +12,7 @@ print("hello openCV")
 image_path = 'assets\\'
 image_name = 'IMG_20200919_094007'
 image_ext = '.jpg'
-results_path = 'results3\\'
+results_path = 'results4\\'
 
 # read image file
 curr_img = cv2.imread(image_path + image_name + image_ext)
