@@ -68,13 +68,12 @@ if __name__ == '__main__':
 # 	input_file_path = input("Please enter the file path ")
 
 ### reading the text file 
-with open(input_file_path, 'r') as f:
+with open(input_file_path, 'r') as file_obj:
 	content = f.readlines()
 	if len(content) == 2:
 		k = int(content[0])
 		text = content[1]
 		
-f.closed
 
 decoded_text = decode(k, text)
 print("decoded text: {}".format(decoded_text))
