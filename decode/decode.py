@@ -69,7 +69,7 @@ if __name__ == '__main__':
 
 ### reading the text file 
 with open(input_file_path, 'r') as file_obj:
-	content = f.readlines()
+	content = file_obj.readlines()
 	if len(content) == 2:
 		k = int(content[0])
 		text = content[1]
