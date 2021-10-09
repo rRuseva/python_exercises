@@ -40,6 +40,22 @@ def listing_files_for_renaming(directory_path):
         print("Hooray! There are some files for renaming.")
         print("\n*************************** >^_^< ***************************\n")
 
+
+def get_file_prefix(file_name):
+    prefix = ""
+    if(file_name.find("IMG") != -1):
+        prefix = "IMG"
+    elif file_name.find("Raw") != -1:
+        prefix = "Raw_"
+    elif file_name.find("Yuv") != -1:
+        prefix = "Yuv_"
+    elif file_name.find("vid") != -1:
+        prefix = "vid"
+    elif file_name.find("video") != -1:
+        prefix = "video"
+
+    return prefix
+
 ### Copies files to the outside directory and renames them with the name of the current directory    
 def copy_rename_from_subfolders(file_names, root_abs_directory, directory_name):
     if not file_names:
@@ -89,115 +105,115 @@ def rename_in_subfolders(directory_path):
             print("\n*************************** \(^o^)/ ***************************\n")
 
 
-    
-def renameMultipleCameras(file_names, directory, dir, start_idx, count):
-    n = len(file_names)
-    st_idx = int(start_idx) - 1
-    renamedCount = 0; 
-    
-    for k in range(st_idx, st_idx+n):
-        #print(k)
-        for p in range(0,3*count):
-            if(len(file_names)>0 ):
-                file_name = file_names[0]
-                pref = file_name.split("_")
-                oldName = file_name.split(".")
-                timestamp = oldName[0].split("_")
-                if(p >= 0 and p <count):
-                    prefix = "case" + str(k+1) + "_W" +"_" + dir 
-                if(p >= count and p <(2*count)):
-                    prefix = "case" + str(k+1)  + "_UW" +"_" + dir
-                if(p >= (2*count) and p <=(3*count)):
-                    prefix = "case" + str(k+1) + "_T" +"_" + dir  
-                newName = oldName[0].replace(pref[0], prefix, 1) + "." + oldName[1]
-                print("- "+file_name+ " = " + newName)
-                os.rename(directory+file_name, directory+newName)
-                file_names.pop(0)
-                renamedCount = renamedCount+1
-        print('')
-        if(renamedCount >= n):
-            break
-    print(" ")
-    return renamedCount
 
-def renameSingleCamera(file_names, directory, dir, start_idx, count):
+### renames images from single camera testing 
+### the new name starts with 'case'_number of the case_the name of the current directory
+### count parameter shows the number of images for one case 
+### start_idx shows the case number from which starts the counting
+def rename_single_camera_testing(file_names, directory_path, directory_name, start_idx, count):
     n = len(file_names)
     st_idx = int(start_idx) - 1
-    renamedCount = 0; 
+    renamed_count = 0; 
     for k in range(st_idx, st_idx+n):
         for p in range(0,count):
-            if(len(file_names)>0):
+            if(n>0):
                 file_name = file_names[0]
-                pref = file_name.split("_")
-                oldName = file_name.split(".")
-                timestamp = oldName[0].split("_")
-                prefix = "case" + str(k+1) +"_" + dir
-                newName = oldName[0].replace(pref[0], prefix, 1) + "." + oldName[1]
+                original_name = file_name.split(".")
+                file_prefix = get_file_prefix(original_name[0])
+                prefix = "case" + str(k+1) +"_" + directory_name
+                new_name = original_name[0].replace(file_prefix, prefix, 1) + "." + original_name[1]
+                print("- "+file_name+ " = " + new_name)
+                os.rename(os.path.join(directory_path, file_name), os.path.join(directory_path, new_name))
+                file_names.pop(0)
+                renamed_count += 1
+    print(" ")
+    return renamed_count
+
+### renames files from triple camera testing
+### equivelent to the testing from the single camera
+### but he new name contains 'W','UW', T for Wide, UltraWide and Tele camera
+### files from each camera are in the same drectory
+def rename_multiple_camera_testing(file_names, directory_path, directory_name, start_idx, count):
+    n = len(file_names)
+    st_idx = int(start_idx) - 1
+    renamed_count = 0; 
+    
+    for k in range(st_idx, st_idx+n):
+        for p in range(0,3*count):
+            if(n>0 ):
+                file_name = file_names[0]
+                original_name = file_name.split(".")
+                file_prefix = get_file_prefix(original_name[0])
+                
+                if(p >= 0 and p <count):
+                    prefix = "case" + str(k+1) + "_W" +"_" + directory_name 
+                if(p >= count and p <(2*count)):
+                    prefix = "case" + str(k+1)  + "_UW" +"_" + directory_name
+                if(p >= (2*count) and p <=(3*count)):
+                    prefix = "case" + str(k+1) + "_T" +"_" + directory_name  
+                
+                new_name = original_name[0].replace(file_prefix, prefix, 1) + "." + original_name[1]
                 print("- "+file_name+ " = " + newName)
                 os.rename(directory+file_name, directory+newName)
                 file_names.pop(0)
-                renamedCount = renamedCount+1
-        print('')
-        if(renamedCount >= n):
-            break
+                renamed_count += 1
     print(" ")
-    return renamedCount
+    return renamed_count
 
-def renameInitialSingle(file_names, directory, dir):   
+### renames files from initial testing
+### each test case is in different folder
+### the new name contains the name of the current directory
+def rename_initial_testing(file_names, directory_path, directory_name):
     n = len(file_names)
     st_idx = 0 
-    renamedCount = 0; 
+    renamed_count = 0; 
     for k in range(st_idx, st_idx+n):
-        if(len(file_names)>0):
+        if(n>0):
             file_name = file_names[0]
-            pref = file_name.split("_")
-            oldName = file_name.split(".")
-            timestamp = oldName[0].split("_")
-            prefix = dir
-            newName = oldName[0].replace(pref[0], prefix, 1) + "." + oldName[1]
-            print("- "+file_name+ " = " + newName)
-            os.rename(directory+"\\"+file_name, directory+"\\"+newName)
+            original_name = file_name.split(".")
+            prefix = get_file_prefix(original_name[0])
+            new_name = original_name[0].replace(prefix, directory_name, 1) + "." + original_name[1]
+            print("- "+file_name+ " = " + new_name)
+            os.rename(os.path.join(directory_path,file_name), os.path.join(directory_path, new_name))
             file_names.pop(0)
-            renamedCount = renamedCount+1
-        print('')
-        if(renamedCount >= n):
-            break
+            renamed_count = renamed_count+1
+        
     print(" ")
-    return renamedCount
+    return renamed_count
 
 
 
-def renameBasedOnTestType(directory, dir, start_idx, count, testType):
-    if (testType == 3):
-        video_count = renameMultipleCameras(video_file_names,directory, dir, start_idx,1)
-        snap_count = renameMultipleCameras(snap_file_names, directory, dir, start_idx,count)
-        raw_count = renameMultipleCameras(raw_file_names, directory, dir, start_idx,count)  
-        # print("testType=3")
-    elif (testType == 2):
-        snap_count = renameSingleCamera(snap_file_names, directory, dir, start_idx,count)
-        raw_count = renameSingleCamera(raw_file_names, directory, dir, start_idx,count)  
-        video_count = renameSingleCamera(video_file_names, directory, dir, start_idx,1)
-        # print("testType=2")
-    elif (testType == 1):
-        snap_count = renameInitialSingle(snap_file_names, directory, dir)
-        raw_count = renameInitialSingle(raw_file_names, directory, dir)  
-        video_count = renameInitialSingle(video_file_names, directory, dir)
-        # print("testType=1")
+def rename_based_on_test_type(directory, dir, start_idx, count, test_type):
+    if (test_type == 3):
+        video_count = rename_multiple_camera_testing(video_file_names,directory, dir, start_idx,1)
+        snap_count = rename_multiple_camera_testing(snap_file_names, directory, dir, start_idx,count)
+        raw_count = rename_multiple_camera_testing(raw_file_names, directory, dir, start_idx,count)  
+        # print("test_type=3")
+    elif (test_type == 2):
+        snap_count = rename_single_camera_testing(snap_file_names, directory, dir, start_idx,count)
+        raw_count = rename_single_camera_testing(raw_file_names, directory, dir, start_idx,count)  
+        video_count = rename_single_camera_testing(video_file_names, directory, dir, start_idx,1)
+        # print("test_type=2")
+    elif (test_type == 1):
+        snap_count = rename_initial_testing(snap_file_names, directory, dir)
+        raw_count = rename_initial_testing(raw_file_names, directory, dir)  
+        video_count = rename_initial_testing(video_file_names, directory, dir)
+        # print("test_type=1")
 
-def renameTestImages(directory, dir, start_idx, count, testType):
+def rename_test_images(directory, dir, start_idx, count, test_type):
     
     ### check for subfolders \\ a.k.a if there is testing from multiple devices
     list_subfolders_with_paths = [f.path for f in os.scandir(directory) if f.is_dir()]
     
     if(len(list_subfolders_with_paths) == 0):        
-        listFilesForRenaming(directory)
-        renameBasedOnTestType(directory, dir, start_idx, count, testType)
+        listing_files_for_renaming(directory)
+        rename_based_on_test_type(directory, dir, start_idx, count, test_type)
             
     elif(len(list_subfolders_with_paths) > 0):
         for directory in list_subfolders_with_paths:     
             dir = get_dir_name(directory)
-            listFilesForRenaming(directory)  
-            renameBasedOnTestType(directory+"\\", dir, start_idx, count, testType)        
+            listing_files_for_renaming(directory)  
+            rename_based_on_test_type(directory, dir, start_idx, count, test_type)        
 
         
         
@@ -253,4 +269,4 @@ help="""Choose the type of testing for renaming:
     if test_type == 0:
         rename_in_subfolders(image_directory_path)
     else:    
-        renameTestImages(image_directory_path+"\\", directoryName, start_idx, count, testType)
+        rename_test_images(image_directory_path, directory_name, start_idx, count, test_type)
