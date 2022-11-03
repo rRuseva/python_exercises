@@ -1,0 +1,10 @@
+
+### any() and all() list comprehensions:
+
+any( condition(x) for x in iterable)
+
+### reverese iterable:
+
+- reverse() 	- reverses mutable sequence in-place 
+- slising[::-1]	- creates a reversed copy of a sequence -- memmory considerations
+- reversed() 	- returns a reversed iterator -- scales well of milion of items
