@@ -1,3 +1,11 @@
+*/venv_f
+*/.env
+*.jpg
+*/results/*.jpg
+*__init__.py
+*/*.jpg
+*/*.png
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
